@@ -1,0 +1,16 @@
+{
+    "author": "ArabCoders",
+    "compatibility": [
+        1
+    ],
+    "description": "Ensure all audio streams match your required codec.",
+    "icon": "https://raw.githubusercontent.com/ArabCoders/unmanic.plugin.encoder_audio_custom/master/icon.png",
+    "id": "encoder_audio_custom",
+    "name": "Audio Encoder Custom",
+    "priorities": {
+        "on_library_management_file_test": 99,
+        "on_worker_process": 0
+    },
+    "tags": "audio,encoder,ffmpeg,library file test",
+    "version": "0.0.1"
+}
