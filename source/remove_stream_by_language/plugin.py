@@ -26,10 +26,10 @@ import logging
 
 from unmanic.libs.unplugins.settings import PluginSettings
 
-from remove_audio_stream_by_language.lib.ffmpeg import StreamMapper, Probe, Parser
+from remove_stream_by_language.lib.ffmpeg import StreamMapper, Probe, Parser
 
 # Configure plugin logger
-logger = logging.getLogger("Unmanic.Plugin.remove_subtitle_stream_by_language")
+logger = logging.getLogger("Unmanic.Plugin.remove_stream_by_language")
 
 
 class Settings(PluginSettings):
@@ -38,7 +38,7 @@ class Settings(PluginSettings):
     }
     form_settings = {
         "languages": {
-            "label": "Languages to remove",
+            "label": "Languages to remove (Usually 3-latter country code)",
         },
     }
 
@@ -59,7 +59,7 @@ class PluginStreamMapper(StreamMapper):
                     return True
         else:
             logger.warning(
-                "Subtitle/Audio stream #{} in file '{}' has no 'language' tag. Ignoring.".format(stream_id, self.input_file))
+                "Audio/Subtitle stream #{} in file '{}' has no 'language' tag. Ignoring.".format(stream_id, self.input_file))
         return False
 
     def test_stream_needs_processing(self, stream_info: dict):
