@@ -55,7 +55,7 @@ class Settings(PluginSettings):
 
     def __set_if_not_found_options_form_settings(self):
         values = {
-            "label": "Look for this codec",
+            "label": "Does the stream use this codec?",
             "input_type": "text",
         }
         if self.get_setting('advanced'):
@@ -64,7 +64,7 @@ class Settings(PluginSettings):
 
     def __set_use_codec_lib_options_form_settings(self):
         values = {
-            "label": "Use this codec to convert",
+            "label": "If not convert to this stream.",
             "input_type": "text",
         }
         if self.get_setting('advanced'):

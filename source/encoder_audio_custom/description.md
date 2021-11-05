@@ -2,5 +2,20 @@
 You can use this plugin to convert any audio stream that does not match your required codec.
 
 # Configurable options
-if_not_found - if the video audio stream is not what is written here. the conversion will start.
-use_codec_lib - will using whatever codec you have chosen in this option.
+
+### <span style="color:magenta">Does the stream use this codec?</span>
+- opus
+
+------------
+
+if not found it will convert the stream to use whatever provided in the next option.
+
+------------
+
+### <span style="color:magenta">If not convert to this stream.</span>
+- libopus
+
+------------
+
+### <span style="color:magenta">Set default audio bitrate</span>
+- 96
