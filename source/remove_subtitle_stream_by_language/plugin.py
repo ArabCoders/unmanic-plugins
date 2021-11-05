@@ -45,7 +45,7 @@ class Settings(PluginSettings):
 
 class PluginStreamMapper(StreamMapper):
     def __init__(self):
-        super(PluginStreamMapper, self).__init__(logger, ['subtitle'])
+        super(PluginStreamMapper, self).__init__(logger, ['audio', 'subtitle'])
 
     def test_tags_for_search_string(self, stream_tags, stream_id):
         if stream_tags and True in list(k.lower() in ['language'] for k in stream_tags):
@@ -59,7 +59,7 @@ class PluginStreamMapper(StreamMapper):
                     return True
         else:
             logger.warning(
-                "Subtitle stream #{} in file '{}' has no 'language' tag. Ignoring.".format(stream_id, self.input_file))
+                "Subtitle/Audio stream #{} in file '{}' has no 'language' tag. Ignoring.".format(stream_id, self.input_file))
         return False
 
     def test_stream_needs_processing(self, stream_info: dict):
@@ -71,7 +71,7 @@ class PluginStreamMapper(StreamMapper):
     def custom_stream_mapping(self, stream_info: dict, stream_id: int):
         """Remove this stream"""
         return {
-            'stream_mapping':  [],
+            'stream_mapping': [],
             'stream_encoding': [],
         }
 
