@@ -34,11 +34,15 @@ logger = logging.getLogger("Unmanic.Plugin.remove_stream_by_language")
 
 class Settings(PluginSettings):
     settings = {
-        "languages": ''
+        "languages_audio": '',
+        "languages_subtitle": '',
     }
     form_settings = {
-        "languages": {
-            "label": "Languages to remove (Usually 3-latter country code)",
+        "languages_audio": {
+            "label": "Audio Languages to remove (Usually 3-latter country code)",
+        },
+        "languages_subtitle": {
+            "label": "Subtitles Languages to remove (Usually 3-latter country code)",
         },
     }
 
@@ -47,11 +51,21 @@ class PluginStreamMapper(StreamMapper):
     def __init__(self):
         super(PluginStreamMapper, self).__init__(logger, ['audio', 'subtitle'])
 
-    def test_tags_for_search_string(self, stream_tags, stream_id):
+    def test_tags_for_search_string(self, stream_tags, stream_id, codec_type):
+
         if stream_tags and True in list(k.lower() in ['language'] for k in stream_tags):
             settings = Settings()
-            language_list = settings.get_setting('languages')
+
+            if codec_type == 'subtitle':
+                language_list = settings.get_setting('languages_subtitle')
+            else:
+                language_list = settings.get_setting('languages_audio')
+
+            if not language_list:
+                return False
+
             languages = list(filter(None, language_list.split(',')))
+
             for language in languages:
                 language = language.strip()
                 if language and language.lower() in stream_tags.get('language', '').lower():
@@ -64,7 +78,7 @@ class PluginStreamMapper(StreamMapper):
 
     def test_stream_needs_processing(self, stream_info: dict):
         """Only add streams that have language task that match our list"""
-        if self.test_tags_for_search_string(stream_info.get('tags'), stream_info.get('index')):
+        if self.test_tags_for_search_string(stream_info.get('tags'), stream_info.get('index'), stream_info.get('codec_type').lower()):
             return True
         return False
 
@@ -93,7 +107,7 @@ def on_library_management_file_test(data):
     settings = Settings()
 
     # If the config is empty (not yet configured) ignore everything
-    if not settings.get_setting('languages'):
+    if not settings.get_setting('languages_subtitle') and not settings.get_setting('languages_audio'):
         logger.debug("Plugin has not yet been configured with a list of languages to remove. Blocking everything.")
         return False
 
