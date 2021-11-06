@@ -102,7 +102,11 @@ class PluginStreamMapper(StreamMapper):
             logger.debug("Stream did not contain 'channels'. Using community default (64k).")
             return 64
 
-        return int(stream_info.get('channels')) * 64
+        bitrate = 64 * int(stream_info.get('channels'))
+
+        logger.debug("Based on Number of Channels ({}) we calculated the bitrate to be ({}k)".format(int(stream_info.get('channels')), bitrate))
+
+        return bitrate
 
     def test_stream_needs_processing(self, stream_info: dict):
         settings = Settings()
@@ -117,7 +121,7 @@ class PluginStreamMapper(StreamMapper):
         stream_encoding = ['-c:a:{}'.format(stream_id), settings.get_setting('use_codec_lib')]
 
         bitrate = settings.get_setting('bitrate')
-        if not bitrate or bitrate == 0:
+        if not bitrate or int(bitrate) == 0:
             bitrate = self.calculate_bitrate(stream_info)
 
         stream_encoding += [
