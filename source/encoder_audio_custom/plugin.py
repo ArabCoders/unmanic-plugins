@@ -39,7 +39,7 @@ class Settings(PluginSettings):
         "custom_options": "",
         "if_not_found": "opus",
         "use_codec_lib": "libopus",
-        "bitrate": 96,
+        "bitrate": 0,
     }
 
     def __init__(self):
@@ -73,7 +73,7 @@ class Settings(PluginSettings):
 
     def __set_bitrate_options_form_settings(self):
         values = {
-            "label": "Set default audio bitrate",
+            "label": "Bitrate (0 for auto calculate) i.e (Channels x 64)",
             "input_type": "text",
         }
         if self.get_setting('advanced'):
@@ -94,6 +94,16 @@ class PluginStreamMapper(StreamMapper):
     def __init__(self):
         super(PluginStreamMapper, self).__init__(logger, ['audio'])
 
+    @staticmethod
+    def calculate_bitrate(stream_info: dict):
+        channels = stream_info.get('channels')
+        # If no channel count is provided, assume the highest bitrate for 6 channels
+        if not channels:
+            logger.debug("Stream did not contain 'channels'. Using community default (64k).")
+            return 64
+
+        return int(stream_info.get('channels')) * 64
+
     def test_stream_needs_processing(self, stream_info: dict):
         settings = Settings()
         # Ignore streams already of the required codec_name
@@ -105,14 +115,17 @@ class PluginStreamMapper(StreamMapper):
         settings = Settings()
 
         stream_encoding = ['-c:a:{}'.format(stream_id), settings.get_setting('use_codec_lib')]
+
+        bitrate = settings.get_setting('bitrate')
+        if not bitrate or bitrate == 0:
+            bitrate = self.calculate_bitrate(stream_info)
+
+        stream_encoding += [
+            '-b:a:{}'.format(stream_id), "{}k".format(bitrate)
+        ]
+
         if settings.get_setting('advanced'):
             stream_encoding += settings.get_setting('custom_options').split()
-        else:
-            # Automatically detect bitrate for this stream.
-            if stream_info.get('channels'):
-                stream_encoding += [
-                    '-b:a:{}'.format(stream_id), "{}k".format(settings.get_setting('bitrate'))
-                ]
 
         return {
             'stream_mapping': ['-map', '0:a:{}'.format(stream_id)],
