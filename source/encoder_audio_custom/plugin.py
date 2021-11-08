@@ -118,7 +118,9 @@ class PluginStreamMapper(StreamMapper):
     def custom_stream_mapping(self, stream_info: dict, stream_id: int):
         settings = Settings()
 
-        stream_encoding = ['-c:a:{}'.format(stream_id), settings.get_setting('use_codec_lib')]
+        toCodec = settings.get_setting('use_codec_lib')
+
+        stream_encoding = ['-c:a:{}'.format(stream_id), toCodec]
 
         bitrate = settings.get_setting('bitrate')
         if not bitrate or int(bitrate) == 0:
@@ -127,6 +129,11 @@ class PluginStreamMapper(StreamMapper):
         stream_encoding += [
             '-b:a:{}'.format(stream_id), "{}k".format(bitrate)
         ]
+
+        if toCodec == "libopus" and stream_info.get('channel_layout') and stream_info.get('channel_layout').lower() == "5.1(side)":
+            stream_encoding += [
+                '-af "channelmap=channel_layout=5.1"'
+            ]
 
         if settings.get_setting('advanced'):
             stream_encoding += settings.get_setting('custom_options').split()
