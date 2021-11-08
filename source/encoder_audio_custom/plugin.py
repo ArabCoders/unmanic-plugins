@@ -40,7 +40,7 @@ class Settings(PluginSettings):
         "if_not_found": "opus",
         "use_codec_lib": "libopus",
         "bitrate": 0,
-        "opus_51_side": "-ac 2",
+        "opus_51_side": "-af channelmap=channel_layout=5.1",
     }
 
     def __init__(self):
@@ -51,6 +51,7 @@ class Settings(PluginSettings):
             "custom_options": self.__set_custom_options_form_settings(),
             "if_not_found": self.__set_if_not_found_options_form_settings(),
             "use_codec_lib": self.__set_use_codec_lib_options_form_settings(),
+            "bitrate": self.__set_bitrate_options_form_settings(),
             "opus_51_side": self.__set_opus_51_side_form_settings()
         }
 
@@ -74,7 +75,7 @@ class Settings(PluginSettings):
 
     def __set_bitrate_options_form_settings(self):
         values = {
-            "label": "Bitrate (0 for auto calculate) i.e (Channels x 64)",
+            "label": "Bitrate (0 for auto calculate) i.e. (Channels x 64)",
             "input_type": "text",
         }
         if self.get_setting('advanced'):
@@ -83,7 +84,7 @@ class Settings(PluginSettings):
 
     def __set_opus_51_side_form_settings(self):
         values = {
-            "label": "ffmpeg libopus does not work with 5.1(side) input your custom mapper here",
+            "label": "ffmpeg libopus does not work with 5.1(side) input your custom mapper here.",
             "input_type": "textarea",
         }
         if self.get_setting('advanced'):
