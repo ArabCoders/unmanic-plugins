@@ -141,8 +141,8 @@ class PluginStreamMapper(StreamMapper):
             '-b:a:{}'.format(stream_id), "{}k".format(bitrate)
         ]
 
-        if toCodec == "libopus" and stream_info.get('channel_layout'):
-            if stream_info.get('channel_layout').lower() == "5.1(side)" and settings.get_setting('opus_51_side'):
+        if toCodec == "libopus" and stream_info.get('channel_layout') and settings.get_setting('opus_51_side'):
+            if stream_info.get('channel_layout').lower() in ["5.1(side)", "unknown"]:
                 stream_encoding += settings.get_setting('opus_51_side').split()
 
         if settings.get_setting('advanced'):

@@ -1,4 +1,7 @@
 
+**<span style="color:#56adda">0.0.8</span>**
+- Handle eAC3 channel_layout (unknown) condition as 5.1(side) if converting to opus 
+
 **<span style="color:#56adda">0.0.7</span>**
 - Config option text update.
 
