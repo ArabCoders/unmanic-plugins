@@ -129,8 +129,10 @@ class PluginStreamMapper(StreamMapper):
         stream_encoding += [
             '-b:a:{}'.format(stream_id),
             '{}k'.format(bitrate),
-            '-ac {}'.format(stream_info.get('channels', 0)),
-            '-af aformat=channel_layouts="7.1|5.1|stereo|mono"'
+            '-ac:a:{}'.format(stream_id),
+            '{}'.format(stream_info.get('channels', 0)),
+            '-af:a:{}'.format(stream_id),
+            'aformat={}'.format("channel_layouts='7.1|5.1|stereo|mono'"),
         ]
 
         if settings.get_setting('advanced'):

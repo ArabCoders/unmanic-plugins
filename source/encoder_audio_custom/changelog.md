@@ -1,3 +1,7 @@
+**<span style="color:#56adda">0.0.10</span>**
+
+- Handle Each stream channel/channel_layout.
+
 **<span style="color:#56adda">0.0.9</span>**
 
 - Better handling channels and channel_layout.
