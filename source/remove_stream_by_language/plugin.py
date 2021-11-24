@@ -36,6 +36,7 @@ class Settings(PluginSettings):
     settings = {
         "languages_audio": '',
         "languages_subtitle": '',
+        "title_audio_or_sub": '',
     }
     form_settings = {
         "languages_audio": {
@@ -43,6 +44,9 @@ class Settings(PluginSettings):
         },
         "languages_subtitle": {
             "label": "Subtitles Languages to remove (Usually 3-latter country code)",
+        },
+        "title_audio_or_sub": {
+            "label": "Remove Audio or subtitle that has this phrases. seperated by a comma. (foo,bar)",
         },
     }
 
@@ -52,10 +56,18 @@ class PluginStreamMapper(StreamMapper):
         super(PluginStreamMapper, self).__init__(logger, ['audio', 'subtitle'])
 
     def test_tags_for_search_string(self, stream_tags, stream_id, codec_type):
+        settings = Settings()
+
+        if stream_tags and True in list(k.lower() in ['title'] for k in stream_tags):
+            titles_list = settings.get_setting('title_audio_or_sub')
+            if titles_list:
+                title = stream_tags.get('title', '').lower()
+                titles = list(filter(None, titles_list.split(',')))
+                for _title in titles:
+                    if _title.lower() in title:
+                        return True
 
         if stream_tags and True in list(k.lower() in ['language'] for k in stream_tags):
-            settings = Settings()
-
             if codec_type == 'subtitle':
                 language_list = settings.get_setting('languages_subtitle')
             else:
@@ -72,8 +84,8 @@ class PluginStreamMapper(StreamMapper):
                     # Found a matching language. Process this stream to remove it
                     return True
         else:
-            logger.warning(
-                "Audio/Subtitle stream #{} in file '{}' has no 'language' tag. Ignoring.".format(stream_id, self.input_file))
+            logger.warning("Audio/Subtitle stream #{} in file '{}' has no 'language' tag. Ignoring.".format(stream_id, self.input_file))
+
         return False
 
     def test_stream_needs_processing(self, stream_info: dict):
