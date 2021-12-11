@@ -72,6 +72,9 @@ class PluginStreamMapper(StreamMapper):
                 language_list = settings.get_setting('languages_subtitle')
             else:
                 language_list = settings.get_setting('languages_audio')
+                if self.audio_stream_count <= 1:
+                    logger.warning("Video file '{}' has only 1 audio stream skipping strip.".format(self.input_file))
+                    return False
 
             if not language_list:
                 return False
