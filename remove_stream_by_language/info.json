@@ -1,0 +1,16 @@
+{
+  "author": "ArabCoders",
+  "compatibility": [
+    1
+  ],
+  "description": "Specify a list of subtitle/audio languages to remove from video files.",
+  "icon": "https://raw.githubusercontent.com/ArabCoders/unmanic-plugins/repo/remove_stream_by_language/icon.png",
+  "id": "remove_stream_by_language",
+  "name": "Remove stream by language",
+  "priorities": {
+    "on_library_management_file_test": 99,
+    "on_worker_process": 1
+  },
+  "tags": "audio,subtitle,ffmpeg,library file test",
+  "version": "0.0.4"
+}
